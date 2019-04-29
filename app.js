@@ -10,8 +10,34 @@ console.log(outlineLength);
 const timeSelect = document.querySelectorAll(".time-select button");
 let fakeDuration = 600;
 
-outline.style.strokeDashoffset = outlineLength;
 outline.style.strokeDasharray = outlineLength;
+outline.style.strokeDashoffset = outlineLength;
+
+    play.addEventListener("click", () => {
+        checkPlaying(song);
+    });
+
+    const checkPlaying = song => {
+        if(song.paused) {
+            song.play();
+            video.play();
+            play.src = './svg/pause.svg';
+        } else {
+            song.pause();
+            video.pause();
+            play.src = './svg/play.svg';
+        }
+    };
+
+    song.ontimeupdate = () => {
+        let currentTime = song.currentTime;
+        let elapsed = fakeDuration - currentTime;
+        let seconds = Math.floor(elapsed % 60);
+        let minutes = Math.floor(elapsed / 60);
+        let progess = outlineLength - (currentTime / fakeDuration) * outlineLength;
+        outline.style.strokeDashoffset = progess;
+        timeDisplay.textContent = `${minutes}:${seconds}`;
+    };
 };
 
 app();
